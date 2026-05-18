@@ -10,11 +10,11 @@ class ProjectSeeder extends Seeder
     public function run(): void
     {
         Project::updateOrCreate(
-            ['slug' => 'sistem-informasi-pemesanan-layanan'],
+            ['slug' => 'web-jasa-suruh-berbasis-web'],
             [
-                'title' => 'Sistem Informasi Pemesanan Layanan',
-                'short_description' => 'Aplikasi web untuk mengelola layanan, request pelanggan, dan status pemesanan secara dinamis.',
-                'description' => 'Project ini dibuat menggunakan Laravel, Livewire, Blade, Filament v3, MariaDB, dan Docker. Admin dapat mengelola data layanan, melihat permintaan pelanggan, serta memperbarui status progress project melalui panel backend.',
+                'title' => 'Web Jasa Suruh Berbasis Web',
+                'short_description' => 'Aplikasi web untuk mempermudah pengguna dalam membuat permintaan jasa suruh secara online dengan proses yang cepat, praktis, dan terpantau.',
+                'description' => 'Web Jasa Suruh Berbasis Web adalah aplikasi yang dibuat untuk membantu pengguna dalam melakukan pemesanan layanan jasa suruh secara online. Melalui sistem ini, pengguna dapat mengirim permintaan layanan, melihat informasi pesanan, dan memantau status progress secara dinamis. Admin dapat mengelola data project, memperbarui status pengerjaan, mengatur progress, serta menampilkan informasi pendukung seperti ERD melalui Filament Admin Panel.',
                 'stack' => [
                     'Laravel',
                     'Filament v3',
@@ -23,13 +23,14 @@ class ProjectSeeder extends Seeder
                     'MariaDB',
                     'Docker',
                 ],
-                'repository_url' => 'https://github.com/username/nama-repository',
+                'repository_url' => 'https://github.com/PallFebrian/project_pemweb-2026',
                 'demo_url' => null,
+                'erd_image' => 'images/ERD_Jasa_Suruh.png',
                 'status' => 'in_progress',
-                'progress' => 70,
+                'progress' => 80,
                 'featured' => true,
                 'is_published' => true,
-                'started_at' => now()->subMonths(2)->toDateString(),
+                'started_at' => now()->toDateString(),
             ]
         );
 
@@ -49,6 +50,7 @@ class ProjectSeeder extends Seeder
                 ],
                 'repository_url' => 'https://github.com/username/portfolio-uts',
                 'demo_url' => null,
+                'erd_image' => null,
                 'status' => 'completed',
                 'progress' => 100,
                 'featured' => true,

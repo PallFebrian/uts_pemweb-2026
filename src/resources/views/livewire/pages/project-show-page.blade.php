@@ -106,9 +106,17 @@
             border-radius: 999px;
         }
 
-        .red { background: #ef4444; }
-        .yellow { background: #f59e0b; }
-        .green { background: #22c55e; }
+        .red {
+            background: #ef4444;
+        }
+
+        .yellow {
+            background: #f59e0b;
+        }
+
+        .green {
+            background: #22c55e;
+        }
 
         .code-line {
             position: relative;
@@ -155,6 +163,46 @@
             font-size: 17px;
             line-height: 1.8;
             white-space: pre-line;
+        }
+
+        .erd-section {
+            margin-top: 34px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+        }
+
+        .erd-header {
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .erd-header h2 {
+            margin: 0;
+        }
+
+        .erd-link {
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 950;
+        }
+
+        .erd-preview {
+            display: block;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            background: var(--surface-solid);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .erd-preview img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         .side-card {
@@ -392,6 +440,33 @@
                     <p>
                         {{ $project->description ?: $project->short_description }}
                     </p>
+
+                    @if ($project->erd_image)
+                        <div class="erd-section">
+                            <div class="erd-header">
+                                <h2>ERD Project</h2>
+
+                                <a
+                                    href="{{ asset('storage/' . $project->erd_image) }}"
+                                    target="_blank"
+                                    class="erd-link"
+                                >
+                                    Buka Gambar ↗
+                                </a>
+                            </div>
+
+                            <a
+                                href="{{ asset('storage/' . $project->erd_image) }}"
+                                target="_blank"
+                                class="erd-preview"
+                            >
+                                <img
+                                    src="{{ asset('storage/' . $project->erd_image) }}"
+                                    alt="ERD {{ $project->title }}"
+                                >
+                            </a>
+                        </div>
+                    @endif
                 </article>
 
                 <aside class="side-card">
@@ -447,7 +522,10 @@
                     @foreach ($relatedProjects as $related)
                         <article class="related-card">
                             <h3>{{ $related->title }}</h3>
-                            <p>{{ $related->short_description }}</p>
+
+                            <p>
+                                {{ $related->short_description }}
+                            </p>
 
                             <a href="{{ route('projects.show', $related) }}">
                                 Lihat Detail →

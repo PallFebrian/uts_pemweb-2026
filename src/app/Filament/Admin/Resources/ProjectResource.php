@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\ProjectResource\Pages;
 use App\Models\Project;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -91,7 +92,7 @@ class ProjectResource extends Resource
                     ])
                     ->columns(3),
 
-                Forms\Components\Section::make('Link Project')
+                Forms\Components\Section::make('Link & Asset Project')
                     ->schema([
                         Forms\Components\TextInput::make('repository_url')
                             ->label('Repository URL')
@@ -102,6 +103,18 @@ class ProjectResource extends Resource
                             ->label('Demo URL')
                             ->url()
                             ->maxLength(255),
+
+                        FileUpload::make('erd_image')
+                            ->label('ERD Image')
+                            ->image()
+                            ->disk('public')
+                            ->directory('projects/erd')
+                            ->visibility('public')
+                            ->imageEditor()
+                            ->downloadable()
+                            ->openable()
+                            ->helperText('Upload gambar ERD project. Format yang disarankan: PNG, JPG, JPEG, atau WebP.')
+                            ->columnSpanFull(),
                     ])
                     ->columns(2),
             ]);
@@ -111,6 +124,12 @@ class ProjectResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('erd_image')
+                    ->label('ERD')
+                    ->disk('public')
+                    ->square()
+                    ->toggleable(),
+
                 Tables\Columns\TextColumn::make('title')
                     ->label('Judul')
                     ->searchable()
