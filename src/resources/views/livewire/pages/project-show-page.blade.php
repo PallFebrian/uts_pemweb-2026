@@ -372,6 +372,22 @@
             'in_progress' => 'In Progress',
             'completed' => 'Completed',
         ][$project->status] ?? $project->status;
+
+        $erdUrl = null;
+
+        if ($project->erd_image) {
+            $erdPath = ltrim($project->erd_image, '/');
+
+            if (str_starts_with($erdPath, 'http://') || str_starts_with($erdPath, 'https://')) {
+                $erdUrl = $erdPath;
+            } elseif (str_starts_with($erdPath, 'images/')) {
+                $erdUrl = asset($erdPath);
+            } elseif (str_starts_with($erdPath, 'storage/')) {
+                $erdUrl = asset($erdPath);
+            } else {
+                $erdUrl = asset('storage/' . $erdPath);
+            }
+        }
     @endphp
 
     <section class="detail-hero">
@@ -441,27 +457,19 @@
                         {{ $project->description ?: $project->short_description }}
                     </p>
 
-                    @if ($project->erd_image)
+                    @if ($erdUrl)
                         <div class="erd-section">
                             <div class="erd-header">
                                 <h2>ERD Project</h2>
 
-                                <a
-                                    href="{{ asset('storage/' . $project->erd_image) }}"
-                                    target="_blank"
-                                    class="erd-link"
-                                >
+                                <a href="{{ $erdUrl }}" target="_blank" class="erd-link">
                                     Buka Gambar ↗
                                 </a>
                             </div>
 
-                            <a
-                                href="{{ asset('storage/' . $project->erd_image) }}"
-                                target="_blank"
-                                class="erd-preview"
-                            >
+                            <a href="{{ $erdUrl }}" target="_blank" class="erd-preview">
                                 <img
-                                    src="{{ asset('storage/' . $project->erd_image) }}"
+                                    src="{{ $erdUrl }}"
                                     alt="ERD {{ $project->title }}"
                                 >
                             </a>
