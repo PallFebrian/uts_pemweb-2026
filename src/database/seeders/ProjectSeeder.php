@@ -48,7 +48,7 @@ class ProjectSeeder extends Seeder
                     'MariaDB',
                     'Docker',
                 ],
-                'repository_url' => 'https://github.com/username/portfolio-uts',
+                'repository_url' => 'https://github.com/PallFebrian/uts_pemweb-2026',
                 'demo_url' => null,
                 'erd_image' => null,
                 'status' => 'completed',

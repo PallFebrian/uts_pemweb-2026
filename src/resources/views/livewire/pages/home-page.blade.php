@@ -1,13 +1,19 @@
 @php
-    $name = $profile?->name ?? 'Portfolio Developer';
+    $name = $profile?->name ?? 'Belum Ada Nama';
     $firstName = explode(' ', trim($name))[0] ?? 'Developer';
 
     $rawTitle = $profile?->title ?? 'Web Developer';
     $title = trim(str_ireplace('Junior', '', $rawTitle));
     $title = $title !== '' ? $title : 'Web Developer';
 
-    $bio = $profile?->bio ?? 'Saya membangun aplikasi web yang fungsional, rapi, cepat, dan mudah digunakan.';
-    $stack = $profile?->stack ?? ['Laravel', 'Livewire', 'Blade', 'Filament', 'MariaDB', 'Docker'];
+    $bio = $profile?->bio ?? 'Bio belum diisi dari admin panel.';
+    $stack = collect($profile?->stack ?? [])->filter()->values()->toArray();
+
+    $skillCount = count($stack);
+    $projectTotal = $projectCount ?? 0;
+    $projectActive = $activeProjectCount ?? 0;
+    $projectCompleted = $completedProjectCount ?? 0;
+    $progressAverage = $averageProgress ?? 0;
 @endphp
 
 <div>
@@ -429,13 +435,6 @@
             box-shadow: 0 12px 28px rgba(17, 24, 39, .04);
         }
 
-        .clean-card h3,
-        .clean-card p,
-        .clean-card span,
-        .clean-card div {
-            color: inherit;
-        }
-
         .skill-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -775,15 +774,17 @@
                     <div class="available-row">
                         <div class="available-text">
                             <span class="kicker-dot"></span>
-                            Tersedia Untuk Project
+                            {{ $profile?->location ? 'Lokasi: ' . $profile->location : 'Data profil dari database' }}
                         </div>
 
                         <div class="mini-stack">
-                            @foreach (array_slice($stack, 0, 5) as $item)
+                            @forelse (array_slice($stack, 0, 5) as $item)
                                 <span class="mini-stack-item">
                                     {{ strtoupper(substr($item, 0, 2)) }}
                                 </span>
-                            @endforeach
+                            @empty
+                                <span class="mini-stack-item">DB</span>
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -814,13 +815,13 @@
                             </div>
 
                             <div class="code-lines">
-                                <div><span class="num">1</span><span class="purple">&lt;section</span> class=<span class="orange">"hero"</span><span class="purple">&gt;</span></div>
-                                <div><span class="num">2</span>&nbsp;&nbsp;<span class="purple">&lt;h1&gt;</span></div>
-                                <div><span class="num">3</span>&nbsp;&nbsp;&nbsp;&nbsp;Saya {{ $name }}</div>
-                                <div><span class="num">4</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="blue">Web Developer</span></div>
-                                <div><span class="num">5</span>&nbsp;&nbsp;<span class="purple">&lt;/h1&gt;</span></div>
-                                <div><span class="num">6</span>&nbsp;&nbsp;<span class="purple">&lt;p&gt;</span>Clean web app<span class="purple">&lt;/p&gt;</span></div>
-                                <div><span class="num">7</span><span class="purple">&lt;/section&gt;</span></div>
+                                <div><span class="num">1</span><span class="purple">Profile</span>::active()</div>
+                                <div><span class="num">2</span>Nama: {{ $name }}</div>
+                                <div><span class="num">3</span>Title: <span class="blue">{{ $title }}</span></div>
+                                <div><span class="num">4</span>Skill: {{ $skillCount }}</div>
+                                <div><span class="num">5</span>Project: {{ $projectTotal }}</div>
+                                <div><span class="num">6</span>Progress: {{ $progressAverage }}%</div>
+                                <div><span class="num">7</span><span class="orange">Database Content</span></div>
                             </div>
                         </div>
                     </div>
@@ -830,8 +831,8 @@
 
                     <div class="floating-stat">
                         <div class="floating-icon">↗</div>
-                        <strong>15+</strong>
-                        <span>Proyek Selesai</span>
+                        <strong>{{ $projectCompleted }}+</strong>
+                        <span>Project Selesai</span>
                     </div>
                 </div>
             </div>
@@ -842,34 +843,34 @@
         <div class="container">
             <div class="stats-card">
                 <div class="stat-item">
-                    <div class="stat-icon">💼</div>
+                    <div class="stat-icon">📁</div>
                     <div>
-                        <h3 class="stat-value">2+</h3>
-                        <p class="stat-label">Tahun Pengalaman</p>
+                        <h3 class="stat-value">{{ $projectTotal }}+</h3>
+                        <p class="stat-label">Project Database</p>
                     </div>
                 </div>
 
                 <div class="stat-item">
-                    <div class="stat-icon">📁</div>
+                    <div class="stat-icon">⚡</div>
                     <div>
-                        <h3 class="stat-value">{{ max($featuredProjects->count(), 1) }}+</h3>
+                        <h3 class="stat-value">{{ $projectActive }}+</h3>
                         <p class="stat-label">Project Aktif</p>
                     </div>
                 </div>
 
                 <div class="stat-item">
-                    <div class="stat-icon">👥</div>
+                    <div class="stat-icon">🧩</div>
                     <div>
-                        <h3 class="stat-value">8+</h3>
-                        <p class="stat-label">Kebutuhan Sistem</p>
+                        <h3 class="stat-value">{{ $skillCount }}+</h3>
+                        <p class="stat-label">Stack Keahlian</p>
                     </div>
                 </div>
 
                 <div class="stat-item">
-                    <div class="stat-icon">🛡</div>
+                    <div class="stat-icon">📊</div>
                     <div>
-                        <h3 class="stat-value">100%</h3>
-                        <p class="stat-label">Komitmen Project</p>
+                        <h3 class="stat-value">{{ $progressAverage }}%</h3>
+                        <p class="stat-label">Rata-rata Progress</p>
                     </div>
                 </div>
             </div>
@@ -882,10 +883,13 @@
                 <div class="clean-card">
                     <div class="section-title">
                         <small>Tentang Saya</small>
-                        <h2>Developer yang fokus pada tampilan rapi dan sistem dinamis.</h2>
+
+                        <h2>
+                            {{ $title }}
+                        </h2>
+
                         <p>
-                            Website ini dibuat menggunakan Laravel, Livewire, Blade, Filament v3, MariaDB, dan Docker.
-                            Data profil, project, dan kontak dikelola secara dinamis dari database.
+                            {{ $bio }}
                         </p>
                     </div>
                 </div>
@@ -893,16 +897,24 @@
                 <div id="keahlian" class="clean-card">
                     <div class="section-title">
                         <small>Keahlian</small>
-                        <h2>Tech stack.</h2>
+
+                        <h2>
+                            Stack {{ $firstName }}
+                        </h2>
                     </div>
 
                     <div class="skill-grid">
-                        @foreach ($stack as $item)
+                        @forelse ($stack as $item)
                             <div class="skill-item">
                                 <span class="skill-logo">{{ strtoupper(substr($item, 0, 2)) }}</span>
                                 <span>{{ $item }}</span>
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="skill-item">
+                                <span class="skill-logo">DB</span>
+                                <span>Isi stack dari Admin Panel</span>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -913,9 +925,13 @@
         <div class="container">
             <div class="section-title">
                 <small>Showcase Project</small>
-                <h2>Project unggulan.</h2>
+
+                <h2>
+                    Project unggulan dari database.
+                </h2>
+
                 <p>
-                    Data project diambil dari database dan bisa diperbarui melalui Filament Admin Panel.
+                    Semua data project di bawah ini berasal dari tabel projects dan bisa diubah melalui Filament Admin Panel.
                 </p>
             </div>
 
@@ -950,12 +966,15 @@
                             </div>
 
                             <h3>{{ $project->title }}</h3>
+
                             <p>{{ $project->short_description }}</p>
 
                             <div class="tag-row">
-                                @foreach (($project->stack ?? []) as $item)
+                                @forelse (($project->stack ?? []) as $item)
                                     <span class="tag">{{ $item }}</span>
-                                @endforeach
+                                @empty
+                                    <span class="tag">Belum ada stack</span>
+                                @endforelse
                             </div>
 
                             <a href="{{ route('projects.show', $project) }}" class="detail-link">
@@ -965,7 +984,7 @@
                     </article>
                 @empty
                     <div class="clean-card">
-                        <h3>Belum ada project.</h3>
+                        <h3>Project belum tersedia.</h3>
                         <p>Tambahkan project dari Filament Admin Panel.</p>
                     </div>
                 @endforelse
@@ -973,8 +992,8 @@
 
             <div class="cta">
                 <div>
-                    <h2>Punya project menarik?</h2>
-                    <p>Kirim pesan melalui form kontak dan data akan tersimpan ke database.</p>
+                    <h2>{{ $profile?->email ?? 'Kontak belum diisi' }}</h2>
+                    <p>{{ $profile?->phone ?? 'Nomor telepon belum diisi dari admin panel.' }}</p>
                 </div>
 
                 <a href="{{ route('contact') }}" class="btn">
